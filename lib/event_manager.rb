@@ -80,6 +80,5 @@ contents.each do |row|
 end
 
 peak_reg_hours = time_array.sum / time_array.length
-puts "The average registration time is #{peak_reg_hours.to_i}:00"
 peak_reg_day = day_array.sum / day_array.length
-puts "The peak registration day is #{Date::DAYNAMES[peak_reg_day.to_i]}"
+puts "The average registration time and day is #{peak_reg_hours.to_i}:00 on a #{Date::DAYNAMES[peak_reg_day.to_i]}"
