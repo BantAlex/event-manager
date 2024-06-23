@@ -6,6 +6,17 @@ def clean_zipcode(zipcode)
   zipcode.to_s.rjust(5,"0")[0..4]
 end
 
+def clear_phone_numbers(number)
+  clean_num = number.gsub(/[()\- .]/, "")
+
+  if clean_num.length > 10 && clean_num[0] == "1"
+    return clean_num.sub(clean_num[0],"")
+  end
+
+  return clean_num unless clean_num.length < 10 || clean_num.length >= 11
+  print "Not a valid number."
+end
+
 def legislators_by_zipcode(zip)
   civic_info = Google::Apis::CivicinfoV2::CivicInfoService.new
   civic_info.key = 'AIzaSyClRzDqDh5MsXwnCWi0kOiiBivP6JsSyBw'
@@ -31,6 +42,7 @@ def save_thank_you_letter(id,form_letter)
   end
 end
 
+
 puts 'EventManager initialized.'
 
 contents = CSV.open(
@@ -47,8 +59,9 @@ contents.each do |row|
   name = row[:first_name]
   zipcode = clean_zipcode(row[:zipcode])
   legislators = legislators_by_zipcode(zipcode)
-
+  phone_numbers = clear_phone_numbers(row[:homephone])
   form_letter = erb_template.result(binding)
 
-  save_thank_you_letter(id,form_letter)
+  puts phone_numbers
+  # save_thank_you_letter(id,form_letter)
 end
