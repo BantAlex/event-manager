@@ -50,8 +50,6 @@ def format_date(date)
   formatted_date
 end
 
-
-
 puts 'EventManager initialized.'
 
 contents = CSV.open(
@@ -64,12 +62,14 @@ template_letter = File.read('form_letter.erb')
 erb_template = ERB.new template_letter
 
 time_array = []
+day_array = []
 
 contents.each do |row|
   id = row[0]
   name = row[:first_name]
   reg_date = row[:regdate]
   time_array.push(format_date(reg_date).hour)
+  day_array.push(format_date(reg_date).wday)
 
   zipcode = clean_zipcode(row[:zipcode])
   legislators = legislators_by_zipcode(zipcode)
@@ -81,3 +81,5 @@ end
 
 peak_reg_hours = time_array.sum / time_array.length
 puts "The average registration time is #{peak_reg_hours.to_i}:00"
+peak_reg_day = day_array.sum / day_array.length
+puts "The peak registration day is #{Date::DAYNAMES[peak_reg_day.to_i]}"
